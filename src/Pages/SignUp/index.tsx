@@ -23,40 +23,35 @@ const SignUp = () => {
     Password,
     CheckPassword,
   };
+  const components = dataset.map(
+    (
+      {
+        componentName,
+        labelFor,
+        title,
+        inputType,
+        inputName,
+        placeholder,
+      }: Data,
+      index: number
+    ) => {
+      const Component = componentMap[componentName];
+      if (!Component) {
+        return null;
+      }
+      return (
+        <Component key={index}>
+          <label htmlFor={labelFor}>{title}</label>
+          <Input type={inputType} name={inputName} placeholder={placeholder} />
+        </Component>
+      );
+    }
+  );
 
   return (
     <Wrapper>
       <Title>註冊帳號</Title>
-      <Form>
-        {dataset.map(
-          (
-            {
-              componentName,
-              labelFor,
-              title,
-              inputType,
-              inputName,
-              placeholder,
-            }: Data,
-            index: number
-          ) => {
-            const Component = componentMap[componentName];
-            if (!Component) {
-              return null;
-            }
-            return (
-              <Component key={index}>
-                <label htmlFor={labelFor}>{title}</label>
-                <Input
-                  type={inputType}
-                  name={inputName}
-                  placeholder={placeholder}
-                />
-              </Component>
-            );
-          }
-        )}
-      </Form>
+      <Form>{components}</Form>
       <Container>
         <Button type="button">註冊帳號</Button>
         <Login onClick={() => navigate(-1)}>登入</Login>

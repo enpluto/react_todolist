@@ -4,8 +4,9 @@ const GlobalStyle = createGlobalStyle`
 body {
   display: flex;
   justify-content: center;
-
+  
   width: 1028px;
+  margin: auto;
   
   background-color: #FFD370;
 
