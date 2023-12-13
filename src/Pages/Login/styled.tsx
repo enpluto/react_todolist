@@ -26,6 +26,16 @@ export const Title = styled.h1`
   }
 `;
 
+export const Form = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+
+  @media (max-width: 376px) {
+    margin-top: 8px;
+  }
+`;
+
 export const Email = styled.div`
   display: flex;
   flex-direction: column;

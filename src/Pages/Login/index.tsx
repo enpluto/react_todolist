@@ -1,6 +1,7 @@
 import {
   Wrapper,
   Title,
+  Form,
   Email,
   Password,
   Input,
@@ -18,14 +19,16 @@ const Login = () => {
   return (
     <Wrapper>
       <Title>最實用的線上待辦事項服務</Title>
-      <Email>
-        <div>Email</div>
-        <Input type="email" placeholder="請輸入Email" />
-      </Email>
-      <Password>
-        <div>密碼</div>
-        <Input type="password" placeholder="請輸入密碼" />
-      </Password>
+      <Form>
+        <Email>
+          <label htmlFor="email">Email</label>
+          <Input type="email" name="email" placeholder="請輸入Email" />
+        </Email>
+        <Password>
+          <label htmlFor="password">密碼</label>
+          <Input type="password" name="password" placeholder="請輸入密碼" />
+        </Password>
+      </Form>
       <Container>
         <Button type="button">登入</Button>
         <SignUp onClick={() => navigate(`/signup`)}>註冊帳號</SignUp>
