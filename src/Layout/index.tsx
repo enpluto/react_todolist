@@ -1,11 +1,14 @@
 import { Outlet } from "react-router-dom";
-import { Container, Wrapper } from "./styled";
+import { Container, Wrapper, Logo } from "./styled";
 
 const Layout = () => {
   return (
     <Wrapper>
       <Container>
-        <img src="/src/assets/images/logo.png" alt="logo" width="313" />
+        <Logo>
+          <img src="/src/assets/images/check.svg" alt="Logo" />
+          <div>ONLINE TODO LIST</div>
+        </Logo>
         <img
           src="/src/assets/images/login.png"
           className="login-bg"

@@ -12,7 +12,7 @@ export const Wrapper = styled.div`
   font-weight: 700;
 
   @media (max-width: 376px) {
-    margin-top: 8px;
+    margin: 8px auto 0 auto;
     width: 311px;
   }
 `;
