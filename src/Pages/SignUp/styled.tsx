@@ -26,7 +26,7 @@ export const Title = styled.h1`
   }
 `;
 
-export const Form = styled.div`
+export const Form = styled.form`
   display: flex;
   flex-direction: column;
   row-gap: 16px;
@@ -59,6 +59,12 @@ export const Input = styled.input`
   @media (max-width: 376px) {
     max-width: 304px;
   }
+`;
+
+export const Hint = styled.div`
+  color: #d87355;
+  font-size: 14px;
+  font-weight: 700;
 `;
 
 export const Container = styled.div`

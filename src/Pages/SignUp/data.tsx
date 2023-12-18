@@ -1,3 +1,5 @@
+export const apiUrl: string = "https://todoo.5xcamp.us";
+
 export type Data = {
   componentName: string;
   labelFor: string;
@@ -34,10 +36,10 @@ export const dataset: Data[] = [
   },
   {
     componentName: "CheckPassword",
-    labelFor: "password",
+    labelFor: "checkPassword",
     title: "再次輸入密碼",
     inputType: "password",
-    inputName: "password",
+    inputName: "checkPassword",
     placeholder: "請再次輸入密碼",
   },
 ];
