@@ -5,7 +5,6 @@ import {
   Email,
   Password,
   Input,
-  Container,
   Button,
   SignUp,
 } from "./styled";
@@ -28,11 +27,9 @@ const Login = () => {
           <label htmlFor="password">密碼</label>
           <Input type="password" name="password" placeholder="請輸入密碼" />
         </Password>
-      </Form>
-      <Container>
         <Button type="button">登入</Button>
-        <SignUp onClick={() => navigate(`/signup`)}>註冊帳號</SignUp>
-      </Container>
+      </Form>
+      <SignUp onClick={() => navigate(`/signup`)}>註冊帳號</SignUp>
     </Wrapper>
   );
 };

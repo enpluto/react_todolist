@@ -12,7 +12,7 @@ export const Wrapper = styled.div`
   font-weight: 700;
 
   @media (max-width: 376px) {
-    margin-top: 8px;
+    margin: 8px auto 0 auto;
     width: 311px;
   }
 `;
@@ -59,14 +59,8 @@ export const Input = styled.input`
   }
 `;
 
-export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  row-gap: 24px;
-`;
-
 export const Button = styled.button`
+  align-self: center;
   border-radius: 10px;
   padding: 12px 48px;
 
@@ -79,6 +73,8 @@ export const Button = styled.button`
 `;
 
 export const SignUp = styled.div`
+  text-align: center;
+
   font-size: 16px;
   font-weight: 700;
 
