@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../assets/context/AuthContext";
 import { AddSvg, CheckedSvg, DeleteSvg } from "./data";
 import axios from "axios";
@@ -25,59 +26,68 @@ import {
 const List = () => {
   const apiUrl: string = "https://todoo.5xcamp.us";
   const { token, login, logout } = useAuth();
+  const navigate = useNavigate();
   const [todos, setTodos] = useState([]);
+  const [add, setAdd] = useState("");
+  const uncompletedTodos = todos.filter((item) => item.completed_at === null);
 
-  const RenderList = async () => {
-    try {
-      const response = await axios.get(`${apiUrl}/todos`, {
-        headers: {
-          authorization: token,
-        },
-      });
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  RenderList();
-  // function initTodo() {
-  //   axios
-  //     .get(`${apiUrl}/todos`, {
-  //       headers: {
-  //         authorization: token,
-  //       },
-  //     })
-  //     .then(function (response) {
-  //       response.data.todos.map((obj) => {
-  //         let todoUnit = [];
-  //         todoUnit.push(obj.content);
-  //         todoUnit.push(obj.id);
-  //         if (obj["completed_at"] === null) {
-  //           todoUnit.push(false);
-  //         } else {
-  //           todoUnit.push(true);
-  //         }
-  //         todosArray.push(todoUnit);
-  //       });
-  //       renderTodos();
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // }
-  // initTodo();
+  useEffect(() => {
+    const InitList = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/todos`, {
+          headers: {
+            authorization: token,
+          },
+        });
+        console.log(response);
+        setTodos(response.data.todos);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    InitList();
+  }, []);
 
-  const todoItem = todos.map((item, index) => {
+  const todoItem = todos.map((item) => {
     return (
-      <Todo key={index + item}>
+      <Todo key={item.id}>
         <li>
           <input type="checkbox" />
-          <div>{item}</div>
+          <div>{item.content}</div>
           <a>{DeleteSvg}</a>
         </li>
       </Todo>
     );
   });
+
+  const handleAddTodo = async () => {
+    try {
+      const response = await axios.post(
+        `${apiUrl}/todos`,
+        {
+          todo: {
+            content: add,
+          },
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      console.log(response);
+      const addTodo = { content: add, completed_at: null };
+      setTodos([addTodo, ...todos]);
+      setAdd("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <Wrapper>
@@ -88,13 +98,20 @@ const List = () => {
         </Logo>
         <Admin>
           <UserName>的待辦</UserName>
-          <Logout type="button">登出</Logout>
+          <Logout type="button" onClick={handleLogout}>
+            登出
+          </Logout>
         </Admin>
       </NavBar>
       <ListContainer>
         <ListInput>
-          <input type="text" placeholder="新增待辦事項" />
-          {AddSvg}
+          <input
+            type="text"
+            placeholder="新增待辦事項"
+            value={add}
+            onChange={(e) => setAdd(e.target.value)}
+          />
+          <div onClick={handleAddTodo}>{AddSvg}</div>
         </ListInput>
         {todos.length > 0 ? (
           <TodoContainer>
@@ -106,7 +123,7 @@ const List = () => {
             <TodoCard>
               {todoItem}
               <TodoStatus>
-                <div>5 個待完成項目</div>
+                <div>{uncompletedTodos.length} 個待完成項目</div>
                 <button type="button">清除已完成項目</button>
               </TodoStatus>
             </TodoCard>
