@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./assets/context/AuthContext";
 
 import ResetStyle from "./assets/styles/ResetStyle";
 import GlobalStyle from "./assets/styles/GlobalStyle";
@@ -10,7 +11,7 @@ import List from "./Pages/List";
 
 function App() {
   return (
-    <>
+    <AuthProvider>
       <ResetStyle />
       <GlobalStyle />
       <Routes>
@@ -20,7 +21,7 @@ function App() {
         </Route>
         <Route path="/list" element={<List />}></Route>
       </Routes>
-    </>
+    </AuthProvider>
   );
 }
 

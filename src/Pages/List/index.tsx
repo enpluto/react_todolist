@@ -1,4 +1,10 @@
 import { useState } from "react";
+import { useAuth } from "../../assets/context/AuthContext";
+import { AddSvg, CheckedSvg, DeleteSvg } from "./data";
+import axios from "axios";
+
+// "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2MDAyIiwic2NwIjoidXNlciIsImF1ZCI6bnVsbCwiaWF0IjoxNzAyOTY3NTU5LCJleHAiOjE3MDQyNjM1NTksImp0aSI6ImQyZmQxOGZiLWI0MjQtNGNhMC04ZDk5LTUzOTA5Y2U3NDkzNCJ9.sRlLcGmUuxByA1LfQ-PK7lwp-5J8nDmH_a5wUfy8JWI"
+
 import {
   Wrapper,
   NavBar,
@@ -15,11 +21,51 @@ import {
   TodoStatus,
   Empty,
 } from "./styled";
-import { AddSvg, CheckedSvg, DeleteSvg } from "./data";
 
 const List = () => {
-  const todos: string[] = ["把冰箱發霉的檸檬拿去丟", "打電話叫媽媽匯款給我"];
-  // const todos: string[] = [];
+  const apiUrl: string = "https://todoo.5xcamp.us";
+  const { token, login, logout } = useAuth();
+  const [todos, setTodos] = useState([]);
+
+  const RenderList = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/todos`, {
+        headers: {
+          authorization: token,
+        },
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  RenderList();
+  // function initTodo() {
+  //   axios
+  //     .get(`${apiUrl}/todos`, {
+  //       headers: {
+  //         authorization: token,
+  //       },
+  //     })
+  //     .then(function (response) {
+  //       response.data.todos.map((obj) => {
+  //         let todoUnit = [];
+  //         todoUnit.push(obj.content);
+  //         todoUnit.push(obj.id);
+  //         if (obj["completed_at"] === null) {
+  //           todoUnit.push(false);
+  //         } else {
+  //           todoUnit.push(true);
+  //         }
+  //         todosArray.push(todoUnit);
+  //       });
+  //       renderTodos();
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // }
+  // initTodo();
 
   const todoItem = todos.map((item, index) => {
     return (

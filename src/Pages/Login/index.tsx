@@ -1,3 +1,9 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { useAuth } from "../../assets/context/AuthContext";
+import axios from "axios";
+
 import {
   Wrapper,
   Title,
@@ -9,16 +15,13 @@ import {
   SignUp,
 } from "./styled";
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import axios from "axios";
-
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
+  const { login } = useAuth();
+
   const apiUrl: string = "https://todoo.5xcamp.us";
 
   const handleButtonClick = async () => {
@@ -27,6 +30,7 @@ const Login = () => {
         user: { email: email, password: password },
       });
       console.log(response);
+      login(response.headers.authorization);
       navigate("/list");
     } catch (error) {
       console.log(error);
