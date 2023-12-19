@@ -76,11 +76,38 @@ const List = () => {
         console.log(error);
       }
     };
+    // 更改todo狀態
+    const handleMarkCompleted = async () => {
+      try {
+        const response = await axios.patch(
+          `${apiUrl}/todos/${item.id}/toggle`,
+          {},
+          {
+            headers: {
+              authorization: token,
+            },
+          }
+        );
+        console.log(response);
+        InitList();
+      } catch (error) {
+        console.log(error);
+      }
+    };
     return (
       <Todo key={item.id}>
         <li>
-          <input type="checkbox" />
-          <div>{item.content}</div>
+          {item.completed_at ? (
+            <>
+              <div onClick={handleMarkCompleted}>{CheckedSvg}</div>
+              <div className="completed">{item.content}</div>
+            </>
+          ) : (
+            <>
+              <input type="checkbox" onClick={handleMarkCompleted} />
+              <div>{item.content}</div>
+            </>
+          )}
           <a onClick={handleDeleteTodo}>{DeleteSvg}</a>
         </li>
       </Todo>
