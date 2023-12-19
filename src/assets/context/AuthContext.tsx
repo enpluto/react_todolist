@@ -2,16 +2,22 @@ import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext();
 
+export const baseUrl: string = "https://todoo.5xcamp.us";
+
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
-  const login = (newToken: string) => {
+  const [username, setUsername] = useState(null);
+
+  const login = (newToken: string, newUsername: string) => {
     setToken(newToken);
+    setUsername(newUsername);
   };
   const logout = () => {
     setToken(null);
+    setUsername(null);
   };
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider value={{ token, username, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -16,8 +16,8 @@ import {
 } from "./styled";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
 
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -30,7 +30,11 @@ const Login = () => {
         user: { email: email, password: password },
       });
       console.log(response);
-      login(response.headers.authorization);
+
+      const token: string = response.headers.authorization;
+      const username: string = response.data.nickname;
+
+      login(token, username);
       navigate("/list");
     } catch (error) {
       console.log(error);

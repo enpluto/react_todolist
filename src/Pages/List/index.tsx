@@ -4,8 +4,6 @@ import { useAuth } from "../../assets/context/AuthContext";
 import { AddSvg, CheckedSvg, DeleteSvg } from "./data";
 import axios from "axios";
 
-// "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2MDAyIiwic2NwIjoidXNlciIsImF1ZCI6bnVsbCwiaWF0IjoxNzAyOTY3NTU5LCJleHAiOjE3MDQyNjM1NTksImp0aSI6ImQyZmQxOGZiLWI0MjQtNGNhMC04ZDk5LTUzOTA5Y2U3NDkzNCJ9.sRlLcGmUuxByA1LfQ-PK7lwp-5J8nDmH_a5wUfy8JWI"
-
 import {
   Wrapper,
   NavBar,
@@ -25,41 +23,71 @@ import {
 
 const List = () => {
   const apiUrl: string = "https://todoo.5xcamp.us";
-  const { token, login, logout } = useAuth();
+  const { token, username, login, logout } = useAuth();
   const navigate = useNavigate();
   const [todos, setTodos] = useState([]);
   const [add, setAdd] = useState("");
   const uncompletedTodos = todos.filter((item) => item.completed_at === null);
 
+  // 取得todo
+  const InitList = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/todos`, {
+        headers: {
+          authorization: token,
+        },
+      });
+      console.log(response);
+      setTodos(response.data.todos);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // 渲染畫面
   useEffect(() => {
-    const InitList = async () => {
+    const RenderList = async () => {
+      await InitList();
+    };
+    RenderList();
+  }, []);
+
+  // 組成Todo元件
+  const todoItem = todos.map((item) => {
+    // 刪除todo
+    const handleDeleteTodo = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/todos`, {
-          headers: {
-            authorization: token,
+        const response = await axios.delete(
+          `${apiUrl}/todos/${item.id}`,
+          {
+            headers: {
+              authorization: token,
+            },
           },
-        });
+          {
+            todo: {
+              id: item.id,
+            },
+          }
+        );
         console.log(response);
-        setTodos(response.data.todos);
+        InitList();
       } catch (error) {
         console.log(error);
       }
     };
-    InitList();
-  }, []);
-
-  const todoItem = todos.map((item) => {
     return (
       <Todo key={item.id}>
         <li>
           <input type="checkbox" />
           <div>{item.content}</div>
-          <a>{DeleteSvg}</a>
+          <a onClick={handleDeleteTodo}>{DeleteSvg}</a>
         </li>
       </Todo>
     );
   });
 
+  // 新增todo
   const handleAddTodo = async () => {
     try {
       const response = await axios.post(
@@ -76,14 +104,14 @@ const List = () => {
         }
       );
       console.log(response);
-      const addTodo = { content: add, completed_at: null };
-      setTodos([addTodo, ...todos]);
+      InitList();
       setAdd("");
     } catch (error) {
       console.log(error);
     }
   };
 
+  // 登出
   const handleLogout = () => {
     logout();
     navigate("/");
@@ -97,7 +125,7 @@ const List = () => {
           <h1>ONLINE TODO LIST</h1>
         </Logo>
         <Admin>
-          <UserName>的待辦</UserName>
+          <UserName>{username}的待辦</UserName>
           <Logout type="button" onClick={handleLogout}>
             登出
           </Logout>
