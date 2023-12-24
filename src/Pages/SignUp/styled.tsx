@@ -34,6 +34,10 @@ export const Form = styled.form`
   @media (max-width: 376px) {
     margin-top: 8px;
   }
+
+  .hint {
+    color: #d87355;
+  }
 `;
 
 export const Email = styled.div`
@@ -61,20 +65,10 @@ export const Input = styled.input`
   }
 `;
 
-export const Hint = styled.div`
-  color: #d87355;
-  font-size: 14px;
-  font-weight: 700;
-`;
-
-export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  row-gap: 24px;
-`;
-
 export const Button = styled.button`
+  display: flex;
+  align-self: center;
+
   border-radius: 10px;
   padding: 12px 48px;
 
@@ -89,6 +83,7 @@ export const Button = styled.button`
 export const Login = styled.div`
   font-size: 16px;
   font-weight: 700;
+  text-align: center;
 
   cursor: pointer;
 `;

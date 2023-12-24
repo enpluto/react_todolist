@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -13,54 +12,40 @@ import {
   UserName,
   Password,
   CheckPassword,
-  Container,
   Button,
   Login,
 } from "./styled";
 
 const SignUp = () => {
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [checkPassword, setCheckPassword] = useState("");
   const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormInput>();
 
-  const handleButtonClick = async () => {
+  interface FormInput {
+    email: string;
+    username: string;
+    password: string;
+    checkPassword: string;
+  }
+
+  const onSubmit: SubmitHandler<FormInput> = async (data) => {
     try {
-      const response = await axios.post(`${apiUrl}/users`, {
+      await axios.post(`${apiUrl}/users`, {
         user: {
-          email: email,
-          nickname: username,
-          password: password,
+          email: data.email,
+          nickname: data.username,
+          password: data.password,
         },
       });
-      console.log(response.data);
       alert("註冊成功！");
       navigate("/");
     } catch (error) {
       console.log(error);
     }
   };
-
-  const handleInputChange = (prop: string, value: string) => {
-    switch (prop) {
-      case "email":
-        setEmail(value);
-        break;
-      case "username":
-        setUsername(value);
-        break;
-      case "password":
-        setPassword(value);
-        break;
-      case "checkPassword":
-        setCheckPassword(value);
-        break;
-      default:
-        break;
-    }
-  };
-
   // 動態生成元件
   const componentMap: { [key: string]: React.ComponentType<any> } = {
     Email,
@@ -77,6 +62,7 @@ const SignUp = () => {
         inputType,
         inputName,
         placeholder,
+        validation,
       }: Data,
       index: number
     ) => {
@@ -89,19 +75,12 @@ const SignUp = () => {
           <label htmlFor={labelFor}>{title}</label>
           <Input
             type={inputType}
-            name={inputName}
             placeholder={placeholder}
-            value={
-              inputName === "email"
-                ? email
-                : inputName === "username"
-                ? username
-                : inputName === "password"
-                ? password
-                : checkPassword
-            }
-            onChange={(e) => handleInputChange(inputName, e.target.value)}
+            {...register(inputName, validation)}
           />
+          {errors[inputName] && (
+            <span className="hint">{errors[inputName].message}</span>
+          )}
         </Component>
       );
     }
@@ -110,13 +89,11 @@ const SignUp = () => {
   return (
     <Wrapper>
       <Title>註冊帳號</Title>
-      <Form>{initComponents}</Form>
-      <Container>
-        <Button type="button" onClick={handleButtonClick}>
-          註冊帳號
-        </Button>
-        <Login onClick={() => navigate(-1)}>登入</Login>
-      </Container>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        {initComponents}
+        <Button type="submit">註冊帳號</Button>
+      </Form>
+      <Login onClick={() => navigate(-1)}>登入</Login>
     </Wrapper>
   );
 };

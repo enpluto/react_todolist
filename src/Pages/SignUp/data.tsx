@@ -7,6 +7,14 @@ export type Data = {
   inputType: string;
   inputName: string;
   placeholder: string;
+  validation?: ValidationRule;
+};
+
+export type ValidationRule = {
+  required: { value: boolean; message: string };
+  pattern?: { value: any; message: string };
+  minLength?: { value: number; message: string };
+  validate?: (value: string) => boolean | string;
 };
 
 export const dataset: Data[] = [
@@ -17,6 +25,10 @@ export const dataset: Data[] = [
     inputType: "email",
     inputName: "email",
     placeholder: "請輸入Email",
+    validation: {
+      required: { value: true, message: "此欄位不可為空" },
+      pattern: { value: /^s+@s+$/i, message: "信箱格式錯誤" },
+    },
   },
   {
     componentName: "UserName",
@@ -25,6 +37,9 @@ export const dataset: Data[] = [
     inputType: "text",
     inputName: "username",
     placeholder: "請輸入暱稱",
+    validation: {
+      required: { value: true, message: "此欄位不可為空" },
+    },
   },
   {
     componentName: "Password",
@@ -33,6 +48,10 @@ export const dataset: Data[] = [
     inputType: "password",
     inputName: "password",
     placeholder: "請輸入密碼",
+    validation: {
+      required: { value: true, message: "此欄位不可為空" },
+      minLength: { value: 6, message: "密碼至少需要6個字符" },
+    },
   },
   {
     componentName: "CheckPassword",
@@ -41,5 +60,11 @@ export const dataset: Data[] = [
     inputType: "password",
     inputName: "checkPassword",
     placeholder: "請再次輸入密碼",
+    validation: {
+      required: { value: true, message: "此欄位不可為空" },
+      // 比對再次輸入的密碼與設定密碼是否相符
+      validate: (checkPassword: string, allInputValues: Record<string, any>) =>
+        checkPassword === allInputValues.password || "與密碼不一致",
+    },
   },
 ];
