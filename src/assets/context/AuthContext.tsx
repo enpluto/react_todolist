@@ -1,12 +1,19 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 
-const AuthContext = createContext();
+interface AuthContextProps {
+  token: string | null;
+  username: string | null;
+  login: (newToken: string, newUsername: string) => void;
+  logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const baseUrl: string = "https://todoo.5xcamp.us";
 
-export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(null);
-  const [username, setUsername] = useState(null);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [token, setToken] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
 
   const login = (newToken: string, newUsername: string) => {
     setToken(newToken);

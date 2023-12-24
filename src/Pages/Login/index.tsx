@@ -16,7 +16,12 @@ import {
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const auth = useAuth();
+  if (!auth) {
+    return;
+  }
+  const { login } = auth;
+
   const {
     register,
     handleSubmit,
@@ -28,7 +33,7 @@ const Login = () => {
     email: string;
     password: string;
   }
-  const onSubmit: SubmitHandler<FormInput> = async (data, e) => {
+  const onSubmit: SubmitHandler<FormInput> = async (data, e?) => {
     try {
       const response = await axios.post(`${apiUrl}/users/sign_in`, {
         user: { email: data.email, password: data.password },
@@ -39,7 +44,9 @@ const Login = () => {
       navigate("/list");
     } catch (error) {
       alert("信箱或密碼不正確");
-      e.target.elements.password.value = "";
+      if (e) {
+        e.target.elements.password.value = "";
+      }
     }
   };
   return (

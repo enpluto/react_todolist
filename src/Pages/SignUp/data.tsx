@@ -14,7 +14,9 @@ export type ValidationRule = {
   required: { value: boolean; message: string };
   pattern?: { value: any; message: string };
   minLength?: { value: number; message: string };
-  validate?: (value: string) => boolean | string;
+  // validate?:
+  // { value: number; message: string };
+  // (value: string, allInputValues?: Record<string, string>) => boolean | string;
 };
 
 export const dataset: Data[] = [
@@ -62,9 +64,15 @@ export const dataset: Data[] = [
     placeholder: "請再次輸入密碼",
     validation: {
       required: { value: true, message: "此欄位不可為空" },
-      // 比對再次輸入的密碼與設定密碼是否相符
-      validate: (checkPassword: string, allInputValues: Record<string, any>) =>
-        checkPassword === allInputValues.password || "與密碼不一致",
+      // validate: (
+      //   checkPassword: string,
+      //   allInputValues?: Record<string, string>
+      // ) => {
+      //   if (allInputValues) {
+      //     return checkPassword === allInputValues.password || "與密碼不一致";
+      //   }
+      //   return false;
+      // },
     },
   },
 ];

@@ -76,10 +76,15 @@ const SignUp = () => {
           <Input
             type={inputType}
             placeholder={placeholder}
-            {...register(inputName, validation)}
+            {...register(
+              inputName as "username" | "email" | "password" | "checkPassword",
+              validation
+            )}
           />
-          {errors[inputName] && (
-            <span className="hint">{errors[inputName].message}</span>
+          {errors[inputName as keyof FormInput] && (
+            <span className="hint">
+              {errors[inputName as keyof FormInput]?.message}
+            </span>
           )}
         </Component>
       );

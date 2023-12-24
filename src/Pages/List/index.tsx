@@ -23,15 +23,22 @@ import {
 
 const List = () => {
   const apiUrl: string = "https://todoo.5xcamp.us";
-  const { token, username, login, logout } = useAuth();
+  const { token, username, logout } = useAuth() as {
+    token: string;
+    username: string;
+    logout: () => void;
+  };
   const navigate = useNavigate();
-  const [todos, setTodos] = useState([]);
+  interface Todo {
+    id: string;
+    content: string;
+    completed_at: string | null;
+  }
+  const [todos, setTodos] = useState<Todo[]>([]);
   const [add, setAdd] = useState("");
   const uncompletedTodos = todos.filter((item) => item.completed_at === null);
-
-  const [filteredTodos, setFilteredTodos] = useState([]);
+  const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
   const [tabStatus, setTabStatus] = useState("全部");
-
   // 取得todo
   const InitList = async () => {
     try {
@@ -61,19 +68,16 @@ const List = () => {
     // 刪除todo
     const handleDeleteTodo = async () => {
       try {
-        const response = await axios.delete(
-          `${apiUrl}/todos/${item.id}`,
-          {
-            headers: {
-              authorization: token,
-            },
+        const response = await axios.delete(`${apiUrl}/todos/${item.id}`, {
+          headers: {
+            authorization: token,
           },
-          {
+          data: {
             todo: {
               id: item.id,
             },
-          }
-        );
+          },
+        });
         console.log(response);
         InitList();
       } catch (error) {
@@ -148,7 +152,7 @@ const List = () => {
     const tabs = ["全部", "待完成", "已完成"];
 
     const handleSelectStatus = (props: string) => {
-      setTabStatus((prevStatus) => {
+      setTabStatus(() => {
         filterTodos(props);
         return props;
       });
@@ -195,19 +199,16 @@ const List = () => {
     try {
       await Promise.all(
         doneList.map(async (item) => {
-          await axios.delete(
-            `${apiUrl}/todos/${item.id}`,
-            {
-              headers: {
-                authorization: token,
-              },
+          await axios.delete(`${apiUrl}/todos/${item.id}`, {
+            headers: {
+              authorization: token,
             },
-            {
+            data: {
               todo: {
                 id: item.id,
               },
-            }
-          );
+            },
+          });
         })
       );
       InitList();
