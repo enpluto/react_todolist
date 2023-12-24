@@ -29,6 +29,9 @@ const List = () => {
   const [add, setAdd] = useState("");
   const uncompletedTodos = todos.filter((item) => item.completed_at === null);
 
+  const [filteredTodos, setFilteredTodos] = useState([]);
+  const [tabStatus, setTabStatus] = useState("全部");
+
   // 取得todo
   const InitList = async () => {
     try {
@@ -39,6 +42,7 @@ const List = () => {
       });
       console.log(response);
       setTodos(response.data.todos);
+      setFilteredTodos(response.data.todos);
     } catch (error) {
       console.log(error);
     }
@@ -53,7 +57,7 @@ const List = () => {
   }, []);
 
   // 組成Todo元件
-  const todoItem = todos.map((item) => {
+  const todoItem = filteredTodos.map((item) => {
     // 刪除todo
     const handleDeleteTodo = async () => {
       try {
@@ -76,6 +80,7 @@ const List = () => {
         console.log(error);
       }
     };
+
     // 更改todo狀態
     const handleMarkCompleted = async () => {
       try {
@@ -138,6 +143,79 @@ const List = () => {
     }
   };
 
+  // 篩選todo狀態
+  const TabContainer = () => {
+    const tabs = ["全部", "待完成", "已完成"];
+
+    const handleSelectStatus = (props: string) => {
+      setTabStatus((prevStatus) => {
+        filterTodos(props);
+        return props;
+      });
+    };
+
+    const filterTodos = (status: string) => {
+      switch (status) {
+        case "全部":
+          setFilteredTodos(todos);
+          break;
+        case "待完成":
+          setFilteredTodos(todos.filter((item) => item.completed_at === null));
+          break;
+        case "已完成":
+          setFilteredTodos(todos.filter((item) => item.completed_at !== null));
+          break;
+        default:
+          setFilteredTodos(todos);
+          break;
+      }
+    };
+
+    return (
+      <ListTab>
+        {tabs.map((item, index) => {
+          return (
+            <li
+              key={index}
+              className={tabStatus === item ? "selected" : ""}
+              onClick={() => handleSelectStatus(item)}
+            >
+              {item}
+            </li>
+          );
+        })}
+      </ListTab>
+    );
+  };
+
+  // 清除所有已完成項目
+  const handleDeleteDone = async () => {
+    const doneList = todos.filter((item) => item.completed_at !== null);
+
+    try {
+      await Promise.all(
+        doneList.map(async (item) => {
+          await axios.delete(
+            `${apiUrl}/todos/${item.id}`,
+            {
+              headers: {
+                authorization: token,
+              },
+            },
+            {
+              todo: {
+                id: item.id,
+              },
+            }
+          );
+        })
+      );
+      InitList();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // 登出
   const handleLogout = () => {
     logout();
@@ -170,16 +248,14 @@ const List = () => {
         </ListInput>
         {todos.length > 0 ? (
           <TodoContainer>
-            <ListTab>
-              <li>全部</li>
-              <li>待完成</li>
-              <li>已完成</li>
-            </ListTab>
+            <TabContainer />
             <TodoCard>
               {todoItem}
               <TodoStatus>
                 <div>{uncompletedTodos.length} 個待完成項目</div>
-                <button type="button">清除已完成項目</button>
+                <button type="button" onClick={() => handleDeleteDone()}>
+                  清除已完成項目
+                </button>
               </TodoStatus>
             </TodoCard>
           </TodoContainer>

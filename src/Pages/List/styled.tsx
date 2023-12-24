@@ -112,19 +112,24 @@ export const TodoContainer = styled.div`
 
 export const ListTab = styled.ul`
   display: flex;
-  align-items: center;
-  justify-content: space-around;
-
-  height: 51px;
-
-  border-bottom: 1px solid #efefef;
 
   color: #9f9a91;
   font-size: 14px;
   font-weight: 700;
 
   li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-bottom: 2px solid #efefef;
+    width: 100%;
+    height: 51px;
     cursor: pointer;
+  }
+  .selected {
+    color: black;
+    border-bottom: 2px solid #000000;
   }
 `;
 
